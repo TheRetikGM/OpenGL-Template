@@ -1,4 +1,5 @@
 #pragma once
+#include <glad/glad.h>
 #include "engine/GameLauncher.h"
 #include "engine/shader.h"
 #include "config.h"

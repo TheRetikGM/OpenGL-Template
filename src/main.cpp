@@ -1,4 +1,3 @@
-#include <glad/glad.h>
 #include <engine/Engine.h>
 #include <vector>
 

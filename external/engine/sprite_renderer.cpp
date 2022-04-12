@@ -11,7 +11,7 @@ SpriteRenderer::~SpriteRenderer()
 	glDeleteVertexArrays(1, &this->quadVAO);
 }
 
-SpriteRenderer& SpriteRenderer::DrawSprite(Texture2D texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color)
+SpriteRenderer& SpriteRenderer::RenderSprite(Texture2D texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color)
 {
 	this->shader.Use();
 
@@ -35,7 +35,7 @@ SpriteRenderer& SpriteRenderer::DrawSprite(Texture2D texture, glm::vec2 position
 
 	return *this;
 }
-SpriteRenderer& SpriteRenderer::DrawPartialSprite(Texture2D texture, glm::vec2 vPartOffset, glm::vec2 vPartSize, glm::vec2 vPosition, glm::vec2 vSize, float fRotate, glm::vec3 vColor)
+SpriteRenderer& SpriteRenderer::RenderPartialSprite(Texture2D texture, glm::vec2 vPartOffset, glm::vec2 vPartSize, glm::vec2 vPosition, glm::vec2 vSize, float fRotate, glm::vec3 vColor)
 {
 	this->shader.Use();
 

@@ -11,14 +11,13 @@ public:
 
 	void Init()
 	{
-		text_renderer->Load(ASSETS_DIR "fonts/DejaVuSansCondensed.ttf", 20);
+		text_renderer->Load(ASSETS_DIR "fonts/DejaVuSansCondensed.ttf", 64);
 		BackgroundColor = glm::vec3(0.0f);
 	}
 	void Delete()
 	{
 		GameCore::Delete();
 	}
-
 	void ProcessInput()
 	{
 		if (Input->Pressed(GLFW_KEY_ESCAPE))
@@ -29,7 +28,10 @@ public:
 	}
 	void Render()
 	{
-		text_renderer->RenderText("Hello, Engine!", 10.0f, 10.0f, 1.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		std::string str = "Hello, Engine!";
+		glm::vec2 str_size = text_renderer->GetStringSize(str);
+		glm::vec2 center = glm::vec2(float(Width), float(Height)) * 0.5f;
+		text_renderer->RenderText(str, center.x - str_size.x * 0.5f, center.y - str_size.y * 0.5f, 1.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 	}
 };
 

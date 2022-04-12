@@ -43,6 +43,15 @@ protected:
 	std::shared_ptr<SpriteRenderer> sprite_renderer;
 	std::shared_ptr<TextRenderer> text_renderer;
 
+	// ===== State variables =====
+	// Refresh pixel projection matrix for built-in renderers on window resize event.
+	bool refreshPixelProjection = true;
+
 	// Orthographic projection matrix used for transformation of pixel coordinates.
 	inline static glm::mat4 pixel_projection = glm::mat4(1.0f);
+
+	// Used for neccessary engine updates. Is separated from OnResize(), because that can be overloaded.
+	void _onResize();
+
+	friend void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 };

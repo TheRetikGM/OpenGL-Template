@@ -106,6 +106,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	GameLauncher::game_instance->Width = width;
 	GameLauncher::game_instance->Height = height;
 	GameLauncher::game_instance->OnResize();
+    GameLauncher::game_instance->_onResize();
 }
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {		

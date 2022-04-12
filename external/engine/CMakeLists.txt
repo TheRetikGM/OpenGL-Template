@@ -5,9 +5,7 @@ set(ENGINE_NAME "Engine")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_DEBUG_POSTFIX "d")
 set(ENGINE_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-if (UNIX)
-	set(ENGINE_LINK_LIBS ${ENGINE_NAME} PARENT_SCOPE)
-endif()
+set(ENGINE_LINK_LIBS ${ENGINE_NAME} PARENT_SCOPE)
 configure_file(engine_config.h.in engine_config.h @ONLY)
 
 file(GLOB engine_src_files "*.cpp")
@@ -37,6 +35,7 @@ if (MSVC)
 	target_link_libraries(${ENGINE_NAME}
 		opengl32
 		debug Debug/glfw3d optimized Release/glfw3
+		debug Debug/freetyped optimized Release/freetype
 	)
 	include(CPack)
 elseif (UNIX)
@@ -50,7 +49,7 @@ elseif (UNIX)
         dl
         m
         z
-	freetype
+		freetype
     )
 endif()
 

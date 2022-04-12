@@ -64,3 +64,13 @@ void GameCore::Update(float dt)
 void GameCore::Render()
 {
 }
+void GameCore::_onResize()
+{
+	if (refreshPixelProjection)
+	{
+		pixel_projection = glm::ortho(0.0f, float(Width), float(Height), 0.0f, 0.0f, -1.0f);
+		basic_renderer->GetShader().Use().SetMat4("projection", pixel_projection);
+		sprite_renderer->GetShader().Use().SetMat4("projection", pixel_projection);
+		text_renderer->SetProjection(pixel_projection);
+	}
+}

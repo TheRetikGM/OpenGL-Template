@@ -215,3 +215,11 @@ void ResourceManager::Clear()
 	Shaders.clear();
 	Textures.clear();
 }
+
+void ResourceManager::DeleteGroup(std::string group)
+{
+	if (Shaders.find(group) != Shaders.end())
+		DeleteShaderGroup(group, true);
+	if (Textures.find(group) != Textures.end())
+		DeleteTextureGroup(group, true);
+}

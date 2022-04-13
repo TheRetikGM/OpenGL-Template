@@ -37,9 +37,10 @@ public:
 		static glm::vec3 vTextColor{ 1.0f, 0.0f, 0.0f };
 		text_renderer->RenderText(str, center.x - str_size.x * 0.5f, center.y - str_size.y * 0.5f, 1.0f, vTextColor);
 
+		Texture2D& awesome_face = ResourceManager::GetTexture("awesome_face");
 		if (render_face)
 			sprite_renderer->RenderSprite(
-				ResourceManager::GetTexture("awesome_face"),
+				awesome_face,
 				glm::vec2(10.0f, 10.0f),
 				glm::vec2(100.0f, 100.0f),
 				0.0f,
@@ -58,6 +59,10 @@ public:
 			ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueBar
 		);
 		ImGui::InputText("Hello text", &str);
+		ImGui::Image(
+			(void*)awesome_face.ID,
+			ImVec2{ 0.25f *  (float)awesome_face.Width, 0.25f * (float)awesome_face.Height }
+		);
 		ImGui::Dummy(ImVec2(10.0f, 10.0f));
 		if (ImGui::Button("Exit"))
 			Exit();

@@ -1,7 +1,10 @@
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include "engine/GameLauncher.h"
+#include <GLFW/glfw3.h>
 #include "engine/DebugColors.h"
+#include "engine/Logger.hpp"
+
+ImGuiIO* imgui_io = nullptr;
 
 inline float get_time_from_start()
 {
@@ -11,14 +14,26 @@ inline float get_time_from_start()
 GameLauncher::GameLauncher(GameCore* instance)
 {
     game_instance = instance;
-    init_glfw();
-    init_glad();
-    init_opengl();
-    game_instance->GetTimeFromStart = &get_time_from_start;
 }
 
+GameLauncher& GameLauncher::Init()
+{
+    init_glfw();
+    init_glad();
+    init_imgui();
+    init_opengl();
+    game_instance->GetTimeFromStart = &get_time_from_start;
+    bInitialized = true;
+    return *this;
+}
 void GameLauncher::Launch()
 {
+    if (!bInitialized)
+    {
+        LOG_C("Launcher not initialized! Maybe call GameLauncher::Init()");
+        return;
+    }
+
     try
     {
         game_instance->InitEngine();
@@ -35,6 +50,11 @@ void GameLauncher::Launch()
             // Poll events like key presses, mouse event, ...
             glfwPollEvents();
 
+            // Start the Dear ImGui frame
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+
             game_instance->ProcessInput();
             game_instance->Update(deltaTime);
 
@@ -45,6 +65,18 @@ void GameLauncher::Launch()
             glClearColor(game_instance->BackgroundColor.r, game_instance->BackgroundColor.g, game_instance->BackgroundColor.b, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             game_instance->Render();
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+            // Update and Render additional Platform Windows
+            // (Platform functions may change he current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere)
+            if (imgui_io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+            {
+                GLFWwindow* backup_current_context = glfwGetCurrentContext();
+                ImGui::UpdatePlatformWindows();
+                ImGui::RenderPlatformWindowsDefault();
+                glfwMakeContextCurrent(backup_current_context);
+            }
 
             // Swap back and front buffers.
             glfwSwapBuffers(window);
@@ -54,7 +86,7 @@ void GameLauncher::Launch()
     }
     catch (const std::exception& e)
     {
-        std::cerr << DC_ERROR " " << e.what() << std::endl;
+        LOG_E(e.what());
     }
     end();
 }
@@ -65,7 +97,11 @@ void GameLauncher::SetCursorMode(int mode)
 void GameLauncher::init_glfw()
 {
     /* Initialize glfw and create window*/
-    glfwInit();
+    if (!glfwInit())
+    {
+        std::cerr << DC_ERROR " Failed to initialize GLFW." << std::endl;
+        return;
+    }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -93,10 +129,44 @@ void GameLauncher::init_opengl()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST | GL_CULL_FACE);
 }
+void GameLauncher::init_imgui()
+{
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    imgui_io = &io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   // Enable keyboard controls.
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;       // Enable docking.
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;     // Enable Multi-View / Platform Windows.
+
+    if (GuiTheme == ImGuiTheme::dark)
+        ImGui::StyleColorsDark();
+    else if (GuiTheme == ImGuiTheme::classic)
+        ImGui::StyleColorsClassic();
+    else
+        ImGui::StyleColorsLight();
+
+    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+}
 void GameLauncher::end()
 {
     game_instance->Delete();
     game_instance->DeleteEngine();
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
+    glfwDestroyWindow(window);
     glfwTerminate();
 }
 

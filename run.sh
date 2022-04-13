@@ -1,3 +1,5 @@
 #! /bin/bash
 
-./build/src/main
+cd build/src
+./main
+cd ../..

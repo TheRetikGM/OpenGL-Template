@@ -54,3 +54,23 @@ elseif (UNIX)
 endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX "Header Files" FILES ${engine_include_files})
+
+
+# Dear ImGui
+set(IMGUI_DIR imgui)
+set(IMGUI ImGui)
+file(GLOB imgui_sources 
+	"${IMGUI_DIR}/*.cpp" 
+	"${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp"
+	"${IMGUI_DIR}/backends/imgui_impl_glfw.cpp"
+)
+file(GLOB imgui_headers 
+	"${IMGUI_DIR}/*.h" 
+	"${IMGUI_DIR}/backends/imgui_impl_opengl3.h"
+	"${IMGUI_DIR}/backends/imgui_impl_glfw.h"
+)
+add_library(${IMGUI} ${imgui_sources} ${imgui_headers})
+target_include_directories(${IMGUI} PUBLIC ${IMGUI_DIR} "${IMGUI_DIR}/backends")
+
+# Link Dear ImGui
+target_link_libraries(${ENGINE_NAME} ${IMGUI})

@@ -20,6 +20,8 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
 	PRIVATE external/Physics2D/include
 	PRIVATE external/engine/include
+	PRIVATE external/engine/imgui
+	PRIVATE external/engine/imgui/backends
 )
 target_link_libraries(${PROJECT_NAME}
 	${ENGINE_LINK_LIBS}

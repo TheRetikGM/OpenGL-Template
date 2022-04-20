@@ -11,7 +11,7 @@ SpriteRenderer::~SpriteRenderer()
 	glDeleteVertexArrays(1, &this->quadVAO);
 }
 
-SpriteRenderer& SpriteRenderer::RenderSprite(Texture2D texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color)
+SpriteRenderer& SpriteRenderer::RenderSprite(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color)
 {
 	this->shader.Use();
 
@@ -25,6 +25,7 @@ SpriteRenderer& SpriteRenderer::RenderSprite(Texture2D texture, glm::vec2 positi
 	this->shader.SetMat4("model", model);
 	this->shader.SetVec3f("spriteColor", color);
 	this->shader.SetVec4f("spriteScaleOffset", glm::vec4(1.0f, 1.0f, 0.0f, 0.0f));
+	this->shader.SetVec2i("inverse_tex", int(texture.FlipHorizontally), int(texture.FlipVertically));
 
 	glActiveTexture(GL_TEXTURE0);
 	texture.Bind();
@@ -35,7 +36,7 @@ SpriteRenderer& SpriteRenderer::RenderSprite(Texture2D texture, glm::vec2 positi
 
 	return *this;
 }
-SpriteRenderer& SpriteRenderer::RenderPartialSprite(Texture2D texture, glm::vec2 vPartOffset, glm::vec2 vPartSize, glm::vec2 vPosition, glm::vec2 vSize, float fRotate, glm::vec3 vColor)
+SpriteRenderer& SpriteRenderer::RenderPartialSprite(const Texture2D& texture, glm::vec2 vPartOffset, glm::vec2 vPartSize, glm::vec2 vPosition, glm::vec2 vSize, float fRotate, glm::vec3 vColor)
 {
 	this->shader.Use();
 
@@ -48,6 +49,7 @@ SpriteRenderer& SpriteRenderer::RenderPartialSprite(Texture2D texture, glm::vec2
 
 	this->shader.SetMat4("model", model);
 	this->shader.SetVec3f("spriteColor", vColor);
+	this->shader.SetVec2i("inverse_tex", int(texture.FlipHorizontally), int(texture.FlipVertically));
 
 	glm::vec2 vSpriteScale = vPartSize / glm::vec2(texture.Width, texture.Height);
 	glm::vec2 vSpriteOffset = vPartOffset / glm::vec2(texture.Width, texture.Height);
@@ -55,6 +57,31 @@ SpriteRenderer& SpriteRenderer::RenderPartialSprite(Texture2D texture, glm::vec2
 
 	glActiveTexture(GL_TEXTURE0);
 	texture.Bind();
+
+	glBindVertexArray(this->quadVAO);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindVertexArray(0);
+
+	return *this;
+}
+SpriteRenderer& SpriteRenderer::RenderGLTexture(unsigned int ID, glm::vec2 vPosition, glm::vec2 vSize, float fRotate, glm::vec3 vColor, bool bFlipH, bool bFlipV)
+{
+	this->shader.Use();
+
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(vPosition, 0.0));
+	model = glm::translate(model, glm::vec3(0.5f * vSize.x, 0.5f * vSize.y, 0.0f));
+	model = glm::rotate(model, glm::radians(fRotate), glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(-0.5f * vSize.x, -0.5f * vSize.y, 0.0f));
+	model = glm::scale(model, glm::vec3(vSize.x, vSize.y, 1.0f));
+
+	this->shader.SetMat4("model", model);
+	this->shader.SetVec3f("spriteColor", vColor);
+	this->shader.SetVec4f("spriteScaleOffset", glm::vec4(1.0f, 1.0f, 0.0f, 0.0f));
+	this->shader.SetVec2i("inverse_tex", int(bFlipH), int(bFlipV));
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, ID);
 
 	glBindVertexArray(this->quadVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

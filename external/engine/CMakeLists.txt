@@ -70,7 +70,7 @@ file(GLOB imgui_headers
 	"${IMGUI_DIR}/backends/imgui_impl_glfw.h"
 )
 add_library(${IMGUI} ${imgui_sources} ${imgui_headers})
-target_include_directories(${IMGUI} PUBLIC ${IMGUI_DIR} "${IMGUI_DIR}/backends")
+target_include_directories(${IMGUI} PUBLIC ${IMGUI_DIR} "${IMGUI_DIR}/backends" include)
 
 # Link Dear ImGui
 target_link_libraries(${ENGINE_NAME} ${IMGUI})

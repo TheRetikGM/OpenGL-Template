@@ -13,7 +13,6 @@ Texture2D::Texture2D()
 	, Filter_min(GL_LINEAR)
 	, Filter_mag(GL_LINEAR)
 {
-	glGenTextures(1, &this->ID);
 }
 Texture2D::~Texture2D()
 {	
@@ -32,6 +31,8 @@ unsigned int get_nearest_multiple_two(unsigned int n)
 
 void Texture2D::Generate(unsigned int width, unsigned int height, unsigned char* data)
 {
+	glGenTextures(1, &this->ID);
+
 	this->Width = width;//get_nearest_multiple_two(width);
 	this->Height = height;//get_nearest_multiple_two(height);
 
@@ -59,4 +60,11 @@ Texture2D& Texture2D::UpdateParameters()
 void Texture2D::Bind() const
 {
 	glBindTexture(GL_TEXTURE_2D, this->ID);
+}
+
+Texture2D& Texture2D::Resize(int new_width, int new_height)
+{
+	glBindTexture(GL_TEXTURE_2D, this->ID);
+	glTexImage2D(GL_TEXTURE_2D, 0, Internal_format, new_width, new_height, 0, Image_format, GL_UNSIGNED_BYTE, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

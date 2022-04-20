@@ -5,3 +5,4 @@
 #include "config.h"
 #include "engine/resource_manager.h"
 #include "engine/Helper.hpp"
+#include "engine/Logger.hpp"

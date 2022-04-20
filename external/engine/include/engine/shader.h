@@ -26,6 +26,9 @@ public:
     void SetVec4f(const char* name, const glm::vec4& value, bool useShader = false) const;
     void SetMat4(const char* name, const glm::mat4& matrix, bool useShader = false) const;
     void SetMat3(const char* name, const glm::mat3& matrix, bool useShader = false) const;
+    void SetVec2i(const char* name, int x, int y, bool useShader = false) const;
+    void SetVec2i(const char* name, const glm::ivec2& value, bool useShader = false) const;
+
 private:
     void checkCompileErrors(unsigned int object, std::string type);
 };

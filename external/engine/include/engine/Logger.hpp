@@ -13,7 +13,7 @@ enum class LogType: int {
     Warning
 };
 
-std::string LogTypeToString(const LogType& t)
+inline std::string LogTypeToString(const LogType& t)
 {
     switch (t)
     {

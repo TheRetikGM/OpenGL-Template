@@ -106,6 +106,18 @@ void Shader::SetMat3(const char* name, const glm::mat3& matrix, bool useShader) 
 		this->Use();
 	glUniformMatrix3fv(glGetUniformLocation(this->ID, name), 1, false, glm::value_ptr(matrix));
 }
+void Shader::SetVec2i(const char* name, int x, int y, bool useShader) const
+{
+	if (useShader)
+		this->Use();
+	glUniform2i(glGetUniformLocation(this->ID, name), x, y);
+}
+void Shader::SetVec2i(const char* name, const glm::ivec2& value, bool useShader) const
+{
+	if (useShader)
+		this->Use();
+	glUniform2i(glGetUniformLocation(this->ID, name), value.x, value.y);
+}
 
 void Shader::checkCompileErrors(unsigned int object, std::string type)
 {

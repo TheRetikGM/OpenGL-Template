@@ -11,6 +11,9 @@ public:
 	unsigned int Wrap_S, Wrap_T;
 	unsigned int Filter_min, Filter_mag;
 
+	bool FlipVertically = false;
+	bool FlipHorizontally = false;
+
 	Texture2D();
 	~Texture2D();
 
@@ -21,6 +24,8 @@ public:
 	Texture2D& SetMinFilter(int filter) { Filter_min = filter; return *this; }
 	Texture2D& SetWrapS(int mode) { Wrap_S = mode; return *this; }
 	Texture2D& SetWrapT(int mode) { Wrap_T = mode; return *this; }
+
+	Texture2D& Resize(int new_width, int new_height);
 
 	void Bind() const;
 };

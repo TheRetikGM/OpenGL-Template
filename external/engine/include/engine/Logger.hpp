@@ -1,9 +1,11 @@
 #pragma once
 #include "DebugColors.h"
 #include <iostream>
+#include "engine/Core.h"
+
 #define LOG_I(message) Logger::LogI(message, __FILE__, __LINE__)
-#define LOG_E(message) Logger::LogE(message, __FILE__, __LINE__)
-#define LOG_C(message) Logger::LogC(message, __FILE__, __LINE__)
+#define LOG_E(message) { Logger::LogE(message, __FILE__, __LINE__); BREAK(); }
+#define LOG_C(message) { Logger::LogC(message, __FILE__, __LINE__); BREAK(); }
 #define LOG_W(message) Logger::LogW(message, __FILE__, __LINE__)
 
 enum class LogType: int {

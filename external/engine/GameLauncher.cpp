@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include "engine/DebugColors.h"
 #include "engine/Logger.hpp"
+#include "engine/Core.h"
 
 ImGuiIO* imgui_io = nullptr;
 
@@ -177,7 +178,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	GameLauncher::game_instance->Height = height;
 	GameLauncher::game_instance->OnResize();
     GameLauncher::game_instance->_onResize();
-    LOG_I("Resized! Width: " + std::to_string(GameLauncher::game_instance->Width) + " Height: " + std::to_string(GameLauncher::game_instance->Height));
 }
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {		

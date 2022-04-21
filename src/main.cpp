@@ -6,37 +6,21 @@ unsigned int SCREEN_HEIGHT = 600;
 
 class Game : public GameCore
 {
-	Texture2D cbo;
-	unsigned int fbo = 0;
-
+	std::shared_ptr<Framebuffer> fbo = nullptr;
+	
 public:
-	Game(unsigned int width, unsigned int height) : GameCore(width, height), cbo() {}
+	Game(unsigned int width, unsigned int height) : GameCore(width, height) {}
 
 	void Init()
-	{	
-		glGenFramebuffers(1, &fbo);
-
-		cbo.Internal_format = GL_RGBA;
-		cbo.Image_format = GL_RGB;
-		cbo.Generate(Width, Height, NULL);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cbo.ID, 0);
-
-		GLenum fb_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		if (fb_status != GL_FRAMEBUFFER_COMPLETE)
-			LOG_E("Framebuffer not complete! Status: " + std::to_string(fb_status));
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+	{
 		ResourceManager::LoadTexture(ASSETS_DIR "awesomeface.png", true, "face");
+
+		fbo = Framebuffer::Create2DBasicFramebuffer(Width, Height);
 	}
 	void Delete()
 	{
 		GameCore::Delete();
-
-		glDeleteFramebuffers(1, &fbo);
-		glDeleteTextures(1, &cbo.ID);
+		fbo->Delete();
 	}
 	void ProcessInput()
 	{
@@ -46,13 +30,14 @@ public:
 	float rotation = 0.0f;
 	void Update(float dt)
 	{
-		rotation += glfwGetTime();
-		if (rotation > M_PIf * 2.0f)
-			rotation -= M_PIf * 2.0f;
+		rotation += 90.0f * dt;
+		if (rotation > 360.0f)
+			rotation -= 360.0f;
 	}
 	void Render()
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		fbo->Bind();
+		fbo->Clear();
 		glm::vec2 face_size = glm::vec2(float(this->Width) / 10.0f, float(Height) / 5.0f);
 		for (int x = 0; x < 10; x++)
 		{
@@ -64,13 +49,13 @@ public:
 				);
 			}
 		}
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		fbo->Unbind();
 
 		static float size[2] = {497.0f, 200.0f};
 
 		ImGui::Begin("Texture test");
 		ImGui::SliderFloat("Size", size, 50.0f, 600.0f);
-		ImGui::Image((ImTextureID)(intptr_t(cbo.ID)), ImVec2(size[0] * (Width / float(Height)), size[0]), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((ImTextureID)(intptr_t(fbo->GetColorAttachmentID(0))), ImVec2(size[0] * (Width / float(Height)), size[0]), ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::Text(("Rotation: " + std::to_string(rotation)).c_str());
 		if (ImGui::Button("Exit"))
 			Exit();
@@ -78,7 +63,7 @@ public:
 	}
 	void OnResize()
 	{
-		cbo.Resize(Width, Height);
+		fbo->Resize(Width, Height);
 	}
 };
 

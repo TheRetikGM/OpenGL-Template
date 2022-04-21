@@ -12,6 +12,7 @@ Texture2D::Texture2D()
 	, Wrap_T(GL_REPEAT)
 	, Filter_min(GL_LINEAR)
 	, Filter_mag(GL_LINEAR)
+	, BindTarget(GL_TEXTURE_2D)
 {
 }
 Texture2D::~Texture2D()
@@ -67,4 +68,10 @@ Texture2D& Texture2D::Resize(int new_width, int new_height)
 	glBindTexture(GL_TEXTURE_2D, this->ID);
 	glTexImage2D(GL_TEXTURE_2D, 0, Internal_format, new_width, new_height, 0, Image_format, GL_UNSIGNED_BYTE, NULL);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return *this;
+}
+void Texture2D::Delete()
+{
+	glDeleteTextures(1, &ID);
 }

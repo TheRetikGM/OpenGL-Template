@@ -12,6 +12,8 @@ class GameCore
 public:
 	bool			Keys[1024];
 	bool			KeysProcessed[1024];
+	bool			MouseButtons[8];
+	bool			MouseButtonsPressed[8];
 	unsigned int	Width, Height;
 	glm::vec3		BackgroundColor;
 	std::string		WindowTitle = "Game";

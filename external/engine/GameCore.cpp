@@ -9,7 +9,7 @@ GameCore::GameCore(unsigned int width, unsigned int height)
 	: Width(width), Height(height)
 	, Keys(), KeysProcessed()
 	, BackgroundColor(0.0f)
-	, Input(new InputInterface(Keys, KeysProcessed))
+	, Input(new InputInterface(Keys, KeysProcessed, MouseButtons, MouseButtonsPressed))
 {
 }
 GameCore::~GameCore()

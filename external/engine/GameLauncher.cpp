@@ -112,6 +112,7 @@ void GameLauncher::init_glfw()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSwapInterval(1);
 }
 void GameLauncher::init_glad()
@@ -195,8 +196,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	GameLauncher::game_instance->ProcessMouse(float(xpos), float(ypos));
+    GameLauncher::game_instance->Input->vMousePosition = glm::vec2(float(xpos), float(ypos));
 }
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	GameLauncher::game_instance->ProcessScroll((float)yoffset);
+}
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (button >= 0 && button < 8)
+    {
+        if (action == GLFW_PRESS)
+            GameLauncher::game_instance->MouseButtons[button] = true;
+        else if (action == GLFW_RELEASE)
+        {
+            GameLauncher::game_instance->MouseButtons[button] = false;
+            GameLauncher::game_instance->MouseButtonsPressed[button] = false;
+        }
+    }
 }

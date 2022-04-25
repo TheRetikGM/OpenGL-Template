@@ -9,6 +9,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 enum class ImGuiTheme: int { dark, light, classic };
 
@@ -39,4 +40,5 @@ protected:
     friend void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
     friend void mouse_callback(GLFWwindow* window, double xpos, double ypos);
     friend void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+    friend void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 };

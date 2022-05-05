@@ -69,10 +69,10 @@ namespace Helper
 	{
 		return (float)std::rand() / (float)RAND_MAX;
 	}
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
 	inline float RandomFloat(float min, float max)
 	{
-		std::random_device rd;
-		std::mt19937 gen(rd());
 		std::uniform_real_distribution<float> dis(min, max);
 		return dis(gen);
 	}

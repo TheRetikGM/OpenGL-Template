@@ -1,6 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include "engine/GLFWInputEnums.h"
 
 /*
 *  Simple keyboard interface wrapper for checking key presses.
@@ -17,33 +18,33 @@ public:
     {}
 
     // Checks ifs key was pressed (will return true only once until it is released).
-    inline bool Pressed(int key)
+    inline bool Pressed(Key key)
     {
-        if (pKeys[key] && !pKeysProcessed[key])
+        if (pKeys[int(key)] && !pKeysProcessed[int(key)])
         {
-            pKeysProcessed[key] = true;
+            pKeysProcessed[int(key)] = true;
             return true;
         }
         return false;
     }
     // Checks if key is being held.
-    inline bool Held(int key)
+    inline bool Held(Key key)
     {
-        return pKeys[key];
+        return pKeys[int(key)];
     }
 
-    inline bool MousePressed(int key)
+    inline bool MousePressed(MouseButton key)
     {
-        if (pMouseButtons[key] && !pMouseButtonsPressed[key])
+        if (pMouseButtons[int(key)] && !pMouseButtonsPressed[int(key)])
         {
-            pMouseButtonsPressed[key] = true;
+            pMouseButtonsPressed[int(key)] = true;
             return true;
         }
         return false;
     }
-    inline bool MouseHeld(int key)
+    inline bool MouseHeld(MouseButton key)
     {
-        return pMouseButtons[key];
+        return pMouseButtons[int(key)];
     }
     const glm::vec2& GetMousePos() { return vMousePosition; }
 

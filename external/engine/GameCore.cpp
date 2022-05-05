@@ -55,7 +55,7 @@ void GameCore::InitEngine()
 }
 void GameCore::ProcessInput()
 {
-	if (Input->Pressed(GLFW_KEY_ESCAPE))
+	if (Input->Pressed(Key::ESCAPE))
 		Run = false;
 }
 void GameCore::Update(float dt)

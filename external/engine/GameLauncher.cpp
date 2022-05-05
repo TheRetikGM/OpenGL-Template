@@ -97,15 +97,19 @@ void GameLauncher::SetCursorMode(int mode)
 }
 void GameLauncher::init_glfw()
 {
-    /* Initialize glfw and create window*/
+    /* Initialize glfw and create window */
     if (!glfwInit())
     {
         std::cerr << DC_ERROR " Failed to initialize GLFW." << std::endl;
         return;
     }
+    
+    // Set window properties.
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    // Create window and assign callbacks.
     window = glfwCreateWindow(game_instance->Width, game_instance->Height, game_instance->WindowTitle.c_str(), nullptr, nullptr);
     glfwMakeContextCurrent(window);
     glfwSetKeyCallback(window, key_callback);

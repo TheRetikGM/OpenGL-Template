@@ -11,7 +11,9 @@ public:
     Timer() = default;
     virtual ~Timer() {}
 
+    // Duration in seconds
     inline void Start(float duration, std::function<void(Timer*)> onEnd) { Restart(duration, onEnd); }
+    // Duration in seconds
     void Restart(float duration, std::function<void(Timer*)> onEnd)
     {
         OnEnd = onEnd;
@@ -34,6 +36,8 @@ public:
         }
     }
     inline Timer& Repeat(bool b) { bRepeat = b; return *this;}
+    inline Timer& Stop() { bEnded = true; return *this; }
+    inline Timer& SetDuration(float duration_in_seconds) { fDuration = duration_in_seconds; return *this; }
 protected:
     float fDuration = 0.0f;
     float fCurrentDuration = 0.0f;

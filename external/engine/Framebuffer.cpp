@@ -185,7 +185,7 @@ bool Framebuffer::checkFramebufferValidity(glm::uvec2 size)
         sError = "More attachments then max size (" + std::to_string(nMaxAttachments) + ").";
         return false;
     }
-    int nColorAttachments;
+    int nColorAttachments = 0;
     for (auto& a : Attachments)
     {
         if (a->GetSize() != size)

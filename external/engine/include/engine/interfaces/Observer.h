@@ -10,6 +10,8 @@ class IObserverSubject;
 class IObserver
 {
 public:
+    virtual ~IObserver() {}
+
     virtual void OnNotify(IObserverSubject* obj, int message, std::any args = nullptr) = 0;
 };
 

@@ -1,7 +1,7 @@
 #pragma once
 
 // Uncomment if building PACKAGE
-//#define _INSTALL
+// #define _INSTALL
 
 #ifndef _INSTALL
 	#cmakedefine SRC_DIR "@SRC_DIR@"
